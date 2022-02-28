@@ -24,7 +24,7 @@ public:
 
     User();
 
-    bool IsProfesor();
+    bool IsProfessor();
     bool IsStudent();
     void Help();
 };
