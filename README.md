@@ -9,7 +9,8 @@ To log in, use one of these IDs:
     Professor: 1001 1002 1000
     Student: 0001 0002 0003 0004 0005 0006
 
-Commands: !help
+Use the command !help to see a list of commands.
+
     Professor:
             !create examName -> This command produces an exam with the specified name
             !drop examName -> This command removes an exam with the specified name
