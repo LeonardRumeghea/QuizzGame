@@ -195,7 +195,7 @@ bool ChatRoom(User* user) {
         if (buffer[0] == '!') {
             		
             if (strncmp(buffer, "!start ", 7) == 0) {
-                if (user->IsProfesor() == true) {
+                if (user->IsProfessor() == true) {
                     pthread_mutex_lock(&userMutex);
                     for (auto it : users) {
                         if (strcmp(it->grad, "Student") == 0 && it->examRoom == false) {
@@ -224,7 +224,7 @@ bool ChatRoom(User* user) {
             
             } 
             else if (strncmp(buffer, "!create", 7) == 0) {
-                if (user->IsProfesor()) {
+                if (user->IsProfessor()) {
 
                     if (CreateExam(buffer + 8) == true) {
                         write(user->socket, "\033[32m[+]\033[0mTable successfully created.", 39);
@@ -237,7 +237,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strncmp(buffer, "!drop", 5) == 0) {
-                if (user->IsProfesor()) {
+                if (user->IsProfessor()) {
 
                     if (DropExam(buffer + 6) == true) {
                         write(user->socket, "\033[32m[+]\033[0mTable successfully dropted.", 37);
@@ -250,7 +250,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strncmp(buffer, "!insert", 7) == 0) {
-                if (user->IsProfesor()) {
+                if (user->IsProfessor()) {
                     char examName[16], question[64], option1[16], option2[16], option3[16], option4[16], correctAnswer[16];
                     int length = 0;
 
@@ -283,7 +283,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strncmp(buffer, "!update", 7) == 0) {
-                if (user->IsProfesor() == true) {     
+                if (user->IsProfessor() == true) {     
                     char questionNumber[8], examName[16], question[64], option1[16], option2[16], option3[16], option4[16], correctAnswer[16];
                     int length = 0;
 
@@ -323,7 +323,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strncmp(buffer, "!remove", 7) == 0) {
-                if (user->IsProfesor() == true) {
+                if (user->IsProfessor() == true) {
                     char questionNumber[8], examName[16];
                     int length = 0;
 
@@ -350,7 +350,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strcmp(buffer, "!show") == 0) { 
-                if (user->IsProfesor()) {
+                if (user->IsProfessor()) {
                     if (ShowExams(user->socket) == false) {
                         write(user->socket, "\033[31m[!]\033[0mThere was a problem!", 32); 
                     }
@@ -360,7 +360,7 @@ bool ChatRoom(User* user) {
                 }
             } 
             else if (strncmp(buffer, "!show ", 6) == 0) { 
-                if (user->IsProfesor()) {
+                if (user->IsProfessor()) {
                     if (ShowQuestions(buffer + 6, user->socket) == false) {
                         write(user->socket, "\033[31m[!]\033[0mThere was a problem displaying the questions!", 57); 
                     }
@@ -376,7 +376,7 @@ bool ChatRoom(User* user) {
                 char cc[256] = "";
                 bool ok = false;
 
-                if (user->IsProfesor()) sprintf(cache, "\n\033[1mYou:\033[0m [\033[1;35mP\033[0m] %s %s\n\n", user->lastName, user->firstName);
+                if (user->IsProfessor()) sprintf(cache, "\n\033[1mYou:\033[0m [\033[1;35mP\033[0m] %s %s\n\n", user->lastName, user->firstName);
                 else sprintf(cache, "\n\033[1mYou\033[0m: [\033[1;36mS\033[0m] %s %s\n\n", user->lastName, user->firstName);
 
                 for (auto it : users) {
@@ -384,7 +384,7 @@ bool ChatRoom(User* user) {
 
                     if (strcmp(it->ID, user->ID) != 0) {
 
-                        if (it->IsProfesor()) sprintf(cc, "[\033[1;35mP\033[0m] %s %s\n", it->lastName, it->firstName);
+                        if (it->IsProfessor()) sprintf(cc, "[\033[1;35mP\033[0m] %s %s\n", it->lastName, it->firstName);
                         else sprintf(cc, "[\033[1;36mS\033[0m] %s %s\n", it->lastName, it->firstName);
                     }
 
@@ -406,7 +406,7 @@ bool ChatRoom(User* user) {
 
             if (receiveLength > 0){
 
-                if (user->IsProfesor()) sprintf(cache, "[\033[1;35mP\033[0m] %s %s: %s", user->lastName, user->firstName, buffer);
+                if (user->IsProfessor()) sprintf(cache, "[\033[1;35mP\033[0m] %s %s: %s", user->lastName, user->firstName, buffer);
                 else sprintf(cache, "[\033[1;36mS\033[0m] %s %s: %s", user->lastName, user->firstName, buffer);
 
                 SendMessage(cache, user->ID);
@@ -549,7 +549,7 @@ static int callback_getResults (void* data, int argc, char** argv, char** azColN
     char* cache = (char*) data;
     char cc[BUFFER_SIZE]; bzero(cc, BUFFER_SIZE);
 
-    sprintf(cc, "\t\033[1mExam:\033[0m %s   \033[1mProfesor:\033[0m %s   \033[1mDate:\033[0m %s   \033[1mPoints:\033[0m %s\n", argv[1], argv[2], argv[3], argv[4]);
+    sprintf(cc, "\t\033[1mExam:\033[0m %s   \033[1mProfessor:\033[0m %s   \033[1mDate:\033[0m %s   \033[1mPoints:\033[0m %s\n", argv[1], argv[2], argv[3], argv[4]);
 
     strcat(cache, cc);
     bzero(cc, BUFFER_SIZE);
@@ -830,9 +830,9 @@ void CreateUsersDB () {
         printf("\033[31m[!]\033[0mCreate table failed: %s.\n", messageError);
     else printf("\033[32m[+]\033[0mTable successfully created.\n");
 
-    string query_insert("INSERT INTO USERS VALUES('1000', 'Admin', 'Admin', 'Profesor');"
-               "INSERT INTO USERS VALUES('1001', 'Bogdan', 'Patrut', 'Profesor');"
-               "INSERT INTO USERS VALUES('1002', 'Ioana', 'Bogdan', 'Profesor');"
+    string query_insert("INSERT INTO USERS VALUES('1000', 'Admin', 'Admin', 'Professor');"
+               "INSERT INTO USERS VALUES('1001', 'Bogdan', 'Patrut', 'Professor');"
+               "INSERT INTO USERS VALUES('1002', 'Ioana', 'Bogdan', 'Professor');"
                "INSERT INTO USERS VALUES('0001', 'Leonard', 'Rumeghea', 'Student');"
                "INSERT INTO USERS VALUES('0002', 'Sabin', 'Chirila', 'Student');"
                "INSERT INTO USERS VALUES('0003', 'Antonio', 'Iatu', 'Student');"
