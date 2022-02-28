@@ -11,12 +11,12 @@ User::User() {
     this->examRoom = false;
 }
 
-bool User::IsProfesor() { return strcmp(this->grad, "Profesor") == 0; }
+bool User::IsProfessor() { return strcmp(this->grad, "Professor") == 0; }
 
 bool User::IsStudent() { return strcmp(this->grad, "Student") == 0; }
 
 void User::Help() {
-    if (this->IsProfesor()) {
+    if (this->IsProfessor()) {
         string cache =  "\n   \033[1m!\033[0m\033[36mcreate\033[0m [examName] -> This command produces an exam with the specified name\n"
                         "   \033[1m!\033[0m\033[36mdrop\033[0m [examName]-> This command removes an exam with the specified name\n"
                         "   \033[1m!\033[0m\033[36minsert\033[0m -> This command adds a question to an exam\n"
